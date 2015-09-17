@@ -49,6 +49,7 @@ public class StatusActivity extends Activity implements View.OnClickListener {
         String status = mTextStatus.getText().toString();
         PostTask postTask = new PostTask();
         postTask.execute(status);
+        mTextStatus.setText("");
         Log.d(TAG, "onClicked");
     }
 
