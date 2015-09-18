@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -32,11 +35,37 @@ public class StatusActivity extends Activity implements View.OnClickListener {
 
         //Inicializar
         mButtonTweet = (Button) findViewById(R.id.status_button_tweet);
+        mButtonTweet.setEnabled(false);
         mTextStatus = (EditText) findViewById(R.id.status_text);
         mTextCount = (TextView) findViewById(R.id.status_text_count);
 
         mTextCount.setText(Integer.toString(140));
+
         mDefaultColor = mTextCount.getTextColors().getDefaultColor();
+
+        mTextStatus.addTextChangedListener(new TextWatcher() {
+            Integer count = Integer.valueOf(mTextCount.getText().toString());
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                Log.d(TAG, charSequence.toString());
+
+                mTextCount.setText(String.valueOf(count - mTextStatus.length()));
+                if (mTextStatus.length() == 0)
+                    mButtonTweet.setEnabled(false);
+                else
+                    mButtonTweet.setEnabled(true);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
     }
 
@@ -49,7 +78,6 @@ public class StatusActivity extends Activity implements View.OnClickListener {
         String status = mTextStatus.getText().toString();
         PostTask postTask = new PostTask();
         postTask.execute(status);
-        mTextStatus.setText("");
         Log.d(TAG, "onClicked");
     }
 
@@ -99,6 +127,13 @@ public class StatusActivity extends Activity implements View.OnClickListener {
             //progress.dismiss();
             if (this != null && result != null) {
                 Toast.makeText(StatusActivity.this, result, Toast.LENGTH_LONG).show();
+                try {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                } catch (Exception e) {
+                    Log.d(TAG, e.getMessage());
+                }
+                mTextStatus.setText("");
             }
         }
     }
