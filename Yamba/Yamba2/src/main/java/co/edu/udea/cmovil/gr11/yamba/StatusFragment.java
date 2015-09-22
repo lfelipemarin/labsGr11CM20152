@@ -89,7 +89,7 @@ public class StatusFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_status, menu);
@@ -109,7 +109,7 @@ public class StatusFragment extends Fragment implements View.OnClickListener {
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
 
 
