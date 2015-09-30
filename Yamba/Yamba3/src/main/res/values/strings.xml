@@ -3,6 +3,7 @@
 
     <string name="app_name">Yamba3-Gr11</string>
     <string name="hello_world">Hello world!</string>
+    <string name="welcome">¡Bienvenido a Yamba!</string>
     <string name="action_settings">Settings</string>
     <string name="status_button_tweet">Tweet</string>
     <string name="status_text_hint">What\'s happening?</string>
@@ -12,8 +13,9 @@
     <string name="password">Password</string>
     <string name="password_summary">How do you log in?</string>
     <string name="status_update">Status Update</string>
+    <string name="interval">Refresh Interval</string>
+    <string name="interval_summary">How frequently should data refresh?</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="interval_summary">list preference</string>
-    <string name="interval">preference</string>
+    <string name="title_activity_main">Yamba-Gr11</string>
 
 </resources>

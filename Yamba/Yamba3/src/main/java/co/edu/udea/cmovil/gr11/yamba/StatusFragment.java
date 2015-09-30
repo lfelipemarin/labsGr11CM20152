@@ -2,9 +2,13 @@ package co.edu.udea.cmovil.gr11.yamba;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -94,6 +98,15 @@ public class StatusFragment extends Fragment implements View.OnClickListener {
         @Override
         protected String doInBackground(String... strings) {
             try {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                String username = prefs.getString("username", "");
+                String password = prefs.getString("password","");
+
+                if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)){
+                    getActivity().startActivity(new Intent(getActivity(), SettingsActivity.class));
+                    return "Please update your username and password";
+                }
+
                 YambaClient cloud = new YambaClient("student", "password");
                 cloud.postStatus(strings[0]);
 
