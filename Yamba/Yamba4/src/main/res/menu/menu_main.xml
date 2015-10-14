@@ -12,13 +12,13 @@
     <item
         android:id="@+id/action_tweet"
         android:icon="@android:drawable/ic_menu_add"
-        android:showAsAction="never"
+        android:showAsAction="always"
         android:title="@string/tweet"/>
 
     <item
         android:id="@+id/action_refresh"
         android:icon="@android:drawable/ic_menu_rotate"
-        android:showAsAction="never"
+        android:showAsAction="always"
         android:title="@string/refresh"/>
 
 </menu>
