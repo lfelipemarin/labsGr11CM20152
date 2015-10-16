@@ -38,6 +38,13 @@
             android:enabled="true"
             android:exported="true" >
         </service>
+
+        <provider
+            android:name=".StatusProvider"
+            android:authorities="co.edu.udea.cmovil.gr11.yamba.StatusProvider"
+            android:enabled="true"
+            android:exported="false" >
+        </provider>
     </application>
 
 </manifest>

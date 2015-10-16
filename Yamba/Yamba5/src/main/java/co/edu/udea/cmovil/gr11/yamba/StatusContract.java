@@ -1,5 +1,6 @@
 package co.edu.udea.cmovil.gr11.yamba;
 
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
@@ -11,6 +12,15 @@ public class StatusContract {
     public static final int DB_VERSION = 1;
     public static final String TABLE = "status";
     public static final String DEFAULT_SORT = Column.CREATED_AT + " DESC";
+
+    //provider specific constants
+    public static final String AUTHORITY = "co.edu.udea.cmovil.gr11.yamba.StatusProvider";
+    public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + TABLE);
+    public static final int STATUS_ITEM = 1;
+    public static final int STATUS_DIR = 2;
+
+    public static final String STATUS_TYPE_ITEM = "vnd.android.cursor.item/vnd.co.edu.udea.cmovil.gr11.yamba.provider.status";
+    public static final String STATUS_TYPE_DIR = "vnd.android.cursor.dir/vnd.co.edu.udea.cmovil.gr11.yamba.provider.status";
 
     public class Column{
 
