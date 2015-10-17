@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,10 +25,10 @@ public class StatusProvider extends ContentProvider {
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         String where;
         switch (sURIMatcher.match(uri)){
-            case StatusContract.STATUS_DIR:
+            case StatusContract.STATUS_DIR: // Se eliminarán cvaros registros
                 where = (selection == null) ? "1" : selection;
                 break;
-            case StatusContract.STATUS_ITEM:
+            case StatusContract.STATUS_ITEM:// Se eliminará un solo registro
                 long id = ContentUris.parseId(uri);
                 where = StatusContract.Column.ID
                         + "="
@@ -43,6 +44,7 @@ public class StatusProvider extends ContentProvider {
         int ret = db.delete(StatusContract.TABLE, where, selectionArgs);
 
         if (ret > 0){
+            //Informa que la información para esta URI ha Cambiado
             getContext().getContentResolver().notifyChange(uri, null);
         }
         Log.d(TAG, "delete records: " + ret);
@@ -62,13 +64,14 @@ public class StatusProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Illegal uri: " + uri);
         }
-    }
+    } //Retorna el MIME type apropiado que se definió en StatusContract
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         Uri ret = null;
 
         if (sURIMatcher.match(uri) != StatusContract.STATUS_DIR){
+            //Verifica que no sea el directorio completo.
             throw new IllegalArgumentException("Illegal uri: " + uri);
         }
         SQLiteDatabase db = dbhelper.getWritableDatabase(); //Obtiene instancia de la DB
@@ -78,6 +81,7 @@ public class StatusProvider extends ContentProvider {
             long id = values.getAsLong(StatusContract.Column.ID);
             ret = ContentUris.withAppendedId(uri, id);
             Log.d(TAG, "Insert Uri: " + ret);
+            //Notify that data for this uri has changed
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return ret;
@@ -93,15 +97,34 @@ public class StatusProvider extends ContentProvider {
     private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
-        sURIMatcher.addURI(StatusContract.AUTHORITY, StatusContract.TABLE, StatusContract.STATUS_DIR);
-        sURIMatcher.addURI(StatusContract.AUTHORITY, StatusContract.TABLE + "/#", StatusContract.STATUS_ITEM);
+        sURIMatcher.addURI(StatusContract.AUTHORITY, StatusContract.TABLE, StatusContract.STATUS_DIR); // Si la URI no termina con un número, se refiere a la colección
+        sURIMatcher.addURI(StatusContract.AUTHORITY, StatusContract.TABLE + "/#", StatusContract.STATUS_ITEM); // Si la URI termina con un número, se refiere a un estado
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection,
-                        String[] selectionArgs, String sortOrder) {
-        // TODO: Implement this to handle query requests from clients.
-        throw new UnsupportedOperationException("Not yet implemented");
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+        qb.setTables(StatusContract.TABLE); //Se qespecifica en que tabla se trabajará
+
+        switch (sURIMatcher.match(uri)){
+            case StatusContract.STATUS_DIR:
+                break;
+            case StatusContract.STATUS_ITEM:
+                qb.appendWhere(StatusContract.Column.ID + " = "+ uri.getLastPathSegment());
+                break;
+            default:
+                throw new IllegalArgumentException("Illegal uri: " + uri);
+        }
+
+        String orderBy = (TextUtils.isEmpty(sortOrder)) ? StatusContract.DEFAULT_SORT: sortOrder; //Para ordenar los registros a obtener
+        SQLiteDatabase db = dbhelper.getReadableDatabase(); //obtener instancia de la BD (Para leer)
+        Cursor cursor = qb.query(db, projection, selection, selectionArgs, null, null, orderBy); //Leer
+
+        //Registrar cambios en la URI
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+        Log.d(TAG, "queried records: " + cursor.getCount());
+        return cursor;
     }
 
     @Override
@@ -109,7 +132,7 @@ public class StatusProvider extends ContentProvider {
         String where;
         switch (sURIMatcher.match(uri)){
             case StatusContract.STATUS_DIR:
-                where = selection;
+                where = selection; // Se actualizarán varios registros (La URI no tiene un ID)
                 break;
             case StatusContract.STATUS_ITEM:
                 Long id = ContentUris.parseId(uri);
@@ -127,6 +150,7 @@ public class StatusProvider extends ContentProvider {
         int ret = db.update(StatusContract.TABLE, values, where, selectionArgs); //Actualiza
 
         if (ret > 0){
+            //Informa que la información para la URI ha cambiado
             getContext().getContentResolver().notifyChange(uri, null);
         }
         Log.d(TAG, "updated records: " + ret);
