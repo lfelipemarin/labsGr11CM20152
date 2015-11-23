@@ -22,7 +22,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
         Notification.Builder builder = new Notification.Builder(context);
         builder.setContentTitle("New tweets!");
-        builder.setContentText("You've got" + count + " new tweets");
+        builder.setContentText("You've got " + count + " new tweets");
         builder.setSmallIcon(android.R.drawable.sym_action_email);
         builder.setContentIntent(operation);
         builder.setAutoCancel(true);
