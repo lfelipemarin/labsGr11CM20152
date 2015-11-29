@@ -2,6 +2,7 @@ package apps.edu.udea.co.anywall_gr11;
 
 import com.parse.Parse;
 import com.parse.ParseACL;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 /**
@@ -20,7 +21,7 @@ public class Aplicacion extends android.app.Application {
     public void onCreate() {
         super.onCreate();
 
-        //ParseObject.registerSubclass(AnywallPost.class);
+        ParseObject.registerSubclass(AnyWallPost.class);
         Parse.initialize(this, "wyw0BXwj7PMVQ8YjR7Mx7BRwfoHkoxOjWJu8AGz5",
                 "B5VIt4YkCARkXSvnmI8bRLIgOzxus4A1jyzUcpFZ");
 

@@ -45,7 +45,7 @@ public class LoginSignupActivity extends AppCompatActivity {
                     @Override
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
-                            Intent intent = new Intent(LoginSignupActivity.this, Welcome.class);
+                            Intent intent = new Intent(LoginSignupActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();
                         } else {
