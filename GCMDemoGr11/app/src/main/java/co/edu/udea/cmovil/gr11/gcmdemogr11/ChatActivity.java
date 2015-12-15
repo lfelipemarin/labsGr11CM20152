@@ -42,7 +42,7 @@ public class ChatActivity extends AppCompatActivity {
 
         editText_mail_id = (EditText) findViewById(R.id.editText_email_id);
         editText_chat_message = (EditText) findViewById(R.id.editText_chat_message);
-        listView_chat_Messages = (ListView) findViewById(R.id.editText_chat_message);
+        listView_chat_Messages = (ListView) findViewById(R.id.listView_chat_messages);
         button_send_chat = (Button) findViewById(R.id.button_send_chat);
         button_send_chat.setOnClickListener(new View.OnClickListener() {
             @Override

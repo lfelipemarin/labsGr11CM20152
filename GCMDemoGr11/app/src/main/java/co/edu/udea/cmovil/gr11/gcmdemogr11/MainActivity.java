@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             editText_user_name = (EditText) findViewById(R.id.editText_user_name);
             editText_email = (EditText) findViewById(R.id.editText_email);
+            button_login = (Button) findViewById(R.id.button_login);
             button_login.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -181,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
         editor.commit();
     }
 
-    private void storeUserDetails (Context context){
+    private void storeUserDetails(Context context) {
         final SharedPreferences prefs = getGCMPreferences(context);
         int appVersion = getAppVersion(context);
         Log.i(TAG, "Saving regId on app version " + appVersion);
@@ -211,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
-            String url = Util.register_url + "?name=" + editText_user_name.getText().toString() + "&email=" + editText_email.getText().toString() + "@regId=" + regid;
+            String url = Util.register_url + "?name=" + editText_user_name.getText().toString() + "&email=" + editText_email.getText().toString() + "&regId=" + regid;
             Log.i("pavan", "url: " + url);
 
             OkHttpClient client_for_getMyFriends = new OkHttpClient();
@@ -222,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
                 url = url.replace(" ", "%20");
                 response = callOkHttpResquest(new URL(url), client_for_getMyFriends);
                 Log.i("pavan", "response: " + response);
-                if (response.matches("(.*)succes(.*)")) {
+                if (response.matches("\nsuccess\n")) {
                     response = "success";
                 } else {
                     response = "failure";
@@ -252,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(context, "Try Again: " + result, Toast.LENGTH_LONG).show();
                     Log.i("pavan", "Try Again: **" + result);
                 }
-            } else{
+            } else {
                 Toast.makeText(context, "Check net connection ", Toast.LENGTH_LONG).show();
             }
         }
@@ -279,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
     byte[] readFully(InputStream in) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
-        for (int count; (count = in.read(buffer)) != 1;) {
+        for (int count; (count = in.read(buffer)) != -1; ) {
             out.write(buffer, 0, count);
         }
         return out.toByteArray();
